@@ -60,6 +60,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Crawling\CrawlDatabase.cs" />
     <Compile Include="Crawling\CrawlWorker.cs" />
     <Compile Include="Crawling\PageCrawl.cs" />
     <Compile Include="CrawlsDataSet.Designer.cs">
@@ -68,6 +69,7 @@
       <DependentUpon>CrawlsDataSet.xsd</DependentUpon>
     </Compile>
     <Compile Include="Internet\Browser.cs" />
+    <Compile Include="Internet\Host.cs" />
     <Compile Include="Internet\Link.cs" />
     <Compile Include="Internet\Page.cs" />
     <Compile Include="Parsers\LinkParser.cs" />

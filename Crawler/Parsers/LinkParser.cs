@@ -23,14 +23,21 @@ namespace Crawler.Parsers
             foreach(Match match in matches)
             {
                 string linkValue = match.Groups[1].Value;
-                
-                if (Uri.IsWellFormedUriString(linkValue, UriKind.Absolute))
+                try
                 {
-                    links.Add(new Uri(linkValue));
+                    if (Uri.IsWellFormedUriString(linkValue, UriKind.Absolute))
+                    {
+                        links.Add(new Uri(linkValue));
+                    }
+                    else
+                    {
+                        links.Add(new Uri(source, linkValue));
+                    }
                 }
-                else
+                catch (Exception ex)
                 {
-                    links.Add(new Uri(source, linkValue));
+                    Console.WriteLine("ERR: Invalid link, skipping. " + ex.Message);
+                    Console.WriteLine(linkValue);
                 }
             }
             return links.Distinct().ToArray();
