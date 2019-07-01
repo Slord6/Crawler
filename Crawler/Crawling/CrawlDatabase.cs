@@ -11,8 +11,6 @@ namespace Crawler.Crawling
 {
     internal static class CrawlDatabase
     {
-        private static string dbConnectionString = ConfigurationManager.ConnectionStrings["Crawler.Properties.Settings.CrawlsConnectionString"].ConnectionString;
-
         /// <summary>
         /// Add a crawl of a page to the database
         /// </summary>

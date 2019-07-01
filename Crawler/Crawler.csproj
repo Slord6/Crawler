@@ -63,11 +63,6 @@
     <Compile Include="Crawling\CrawlDatabase.cs" />
     <Compile Include="Crawling\CrawlWorker.cs" />
     <Compile Include="Crawling\PageCrawl.cs" />
-    <Compile Include="CrawlsDataSet.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>CrawlsDataSet.xsd</DependentUpon>
-    </Compile>
     <Compile Include="Internet\Browser.cs" />
     <Compile Include="Internet\Host.cs" />
     <Compile Include="Internet\Link.cs" />
@@ -83,30 +78,10 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
-    <None Include="CrawlsDataSet.xsc">
-      <DependentUpon>CrawlsDataSet.xsd</DependentUpon>
-    </None>
-    <None Include="CrawlsDataSet.xsd">
-      <Generator>MSDataSetGenerator</Generator>
-      <LastGenOutput>CrawlsDataSet.Designer.cs</LastGenOutput>
-      <SubType>Designer</SubType>
-    </None>
-    <None Include="CrawlsDataSet.xss">
-      <DependentUpon>CrawlsDataSet.xsd</DependentUpon>
-    </None>
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Crawls.mdf">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Crawls_log.ldf">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      <DependentUpon>Crawls.mdf</DependentUpon>
-    </Content>
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.5.2">
