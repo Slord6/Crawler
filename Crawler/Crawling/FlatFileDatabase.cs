@@ -4,28 +4,19 @@ using System;
 
 namespace Crawler.Crawling
 {
-    internal class FlatFileDatabase : ICrawlDatabase
+    internal class FlatFileDatabase : NamedDatabase
     {
-        private string crawlName;
-
-        public string Name
-        {
-            get
-            {
-                return crawlName;
-            }
-        }
 
         public FlatFileDatabase(string name)
         {
-            this.crawlName = name;
+            this.name = name;
         }
 
         /// <summary>
         /// Add a crawl of a page to the database
         /// </summary>
         /// <param name="crawl">The crawl to add</param>
-        public PageCrawl InsertPageCrawl(PageCrawl crawl)
+        public override PageCrawl InsertPageCrawl(PageCrawl crawl)
         {
             Host host = GetOrInsertHost(crawl);
             Page page = GetOrInsertPage(crawl, host);
@@ -39,7 +30,7 @@ namespace Crawler.Crawling
         /// <param name="destinationPageId">The page id of the destination page</param>
         /// <param name="linkText">The readable text of the link</param>
         /// <returns></returns>
-        public Link InsertLink(int sourcePageId, int destinationPageId, string linkText = null)
+        public override Link InsertLink(int sourcePageId, int destinationPageId, string linkText = null)
         {
             throw new NotImplementedException();
         }

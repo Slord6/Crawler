@@ -30,10 +30,7 @@ namespace Crawler
 
             foreach (PageCrawl crawl in crawler.Start())
             {
-                Console.WriteLine(crawl.CrawlTime);
-                Console.WriteLine(crawl.Page.Uri.ToString());
-                Console.WriteLine(crawl.Content.Length + " bytes");
-                Console.WriteLine();
+                database.InsertPageCrawl(crawl);
             }
 
             Console.WriteLine("Ran out of links!");
@@ -61,7 +58,7 @@ namespace Crawler
                 }
             }
 
-            database = new FlatFileDatabase(args[0]);
+            database = new LoggerDatabase(args[0]);
             Console.WriteLine("Search: " + database.Name);
             Browser.UserAgentContactInformation = args[1];
             Console.WriteLine("User Agent: " + Browser.UserAgent);
