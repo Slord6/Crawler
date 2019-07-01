@@ -60,8 +60,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Crawling\CrawlDatabase.cs" />
+    <Compile Include="Crawling\FlatFileDatabase.cs" />
     <Compile Include="Crawling\CrawlWorker.cs" />
+    <Compile Include="Crawling\Interfaces\ICrawlDatabase.cs" />
     <Compile Include="Crawling\PageCrawl.cs" />
     <Compile Include="Crawling\Robots.cs" />
     <Compile Include="Internet\Browser.cs" />

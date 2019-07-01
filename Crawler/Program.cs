@@ -8,11 +8,14 @@ using Crawler.Crawling;
 using System.Data.SqlClient;
 using System.Configuration;
 using System.Data;
+using System.IO;
+using Crawler.Crawling.Interfaces;
 
 namespace Crawler
 {
     class Program
     {
+        private static ICrawlDatabase database;
 
         static void Main(string[] args)
         {
@@ -49,8 +52,18 @@ namespace Crawler
                 PrintHelp();
                 return false;
             }
+            foreach(char invalidChar in Path.GetInvalidFileNameChars().Concat(Path.GetInvalidPathChars()))
+            {
+                if(args[0].Contains(invalidChar))
+                {
+                    Console.WriteLine("Search name must be usable as file/directory name");
+                    return false;
+                }
+            }
+
+            database = new FlatFileDatabase(args[0]);
+            Console.WriteLine("Search: " + database.Name);
             Browser.UserAgentContactInformation = args[1];
-            Console.WriteLine("Search: " + args[0]);
             Console.WriteLine("User Agent: " + Browser.UserAgent);
             Console.WriteLine();
             return true;
