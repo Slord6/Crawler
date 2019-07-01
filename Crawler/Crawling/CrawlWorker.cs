@@ -11,19 +11,19 @@ namespace Crawler.Crawling
 {
     public class CrawlWorker
     {
-        private int waitTime;
         private Queue<Uri> frontier;
         private HashSet<string> visited;
+        private Dictionary<string, Robots> robots;
 
         public CrawlWorker(Uri[] seeds)
         {
             visited = new HashSet<string>();
+            robots = new Dictionary<string, Robots>();
             frontier = new Queue<Uri>();
-            foreach(Uri seed in seeds)
+            foreach (Uri seed in seeds)
             {
                 frontier.Enqueue(seed);
             }
-            waitTime = 5000;
         }
 
         public IEnumerable<PageCrawl> Start()
@@ -34,11 +34,10 @@ namespace Crawler.Crawling
 
                 Uri nextCrawlLink = frontier.Dequeue();
 
-                // Skip visited
-                if (visited.Contains(nextCrawlLink.ToString())) continue;
-                visited.Add(nextCrawlLink.ToString());
+                if (ShouldSkip(nextCrawlLink)) continue;
 
                 PageCrawl crawl = Browser.Crawl(new Page(nextCrawlLink));
+                visited.Add(nextCrawlLink.ToString());
                 // Ensure crawl didn't fail
                 if (crawl == null) continue;
 
@@ -46,17 +45,52 @@ namespace Crawler.Crawling
 
                 // TODO add use of database here
                 // Add links and new crawl
-                
-                foreach(Uri uri in newLinks)
+
+                foreach (Uri uri in newLinks)
                 {
-                    if(!visited.Contains(uri.ToString())) {
+                    if (!visited.Contains(uri.ToString()))
+                    {
                         frontier.Enqueue(uri);
                     }
                 }
 
                 yield return crawl;
-                Thread.Sleep(waitTime);
+                int millisecondDelay = robots[nextCrawlLink.AbsoluteUri].CrawlDelay * 1000;
+                Console.WriteLine("Waiting for " + millisecondDelay + "ms");
+                Thread.Sleep(millisecondDelay);
             }
         }
+
+        /// <summary>
+        /// Should the uri be skipped?
+        /// Based on site's robots.txt and previously visited uris
+        /// </summary>
+        /// <param name="uri">The uri to check</param>
+        /// <returns>True if the uri should be skipper</returns>
+        private bool ShouldSkip(Uri uri)
+        {
+            // Skip visited
+            if (visited.Contains(uri.ToString()))
+            {
+                Console.WriteLine("Already visited " + uri.ToString() + ", skipping");
+                return true;
+            }
+
+            // Skip those blocked by robots
+            if (!robots.ContainsKey(uri.AbsoluteUri))
+            {
+                robots.Add(uri.AbsoluteUri, new Robots(uri, Browser.UserAgent));
+            }
+            Robots robot = robots[uri.AbsoluteUri];
+
+            if (!robot.Allowed(uri))
+            {
+                Console.WriteLine("Robots.txt blocks access to " + uri.ToString() + ". Skipping." + Environment.NewLine);
+                return true;
+            }
+
+            return false;
+        }
     }
+
 }

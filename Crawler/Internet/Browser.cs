@@ -11,6 +11,31 @@ namespace Crawler.Internet
 {
     public static class Browser
     {
+        private static string userAgentContactInfo = "";
+        /// <summary>
+        /// The user agent string of the crawler
+        /// </summary>
+        public static string UserAgent
+        {
+            get
+            {
+                return "CrawLord/" + Application.ProductVersion
+                    + " (" + Environment.OSVersion + ") "
+                    + UserAgentContactInformation;
+            }
+        }
+
+        public static string UserAgentContactInformation
+        {
+            get
+            {
+                return userAgentContactInfo;
+            }
+            set
+            {
+                userAgentContactInfo = value;
+            }
+        }
 
         public static PageCrawl Crawl(Page page)
         {
@@ -20,6 +45,7 @@ namespace Crawler.Internet
                    | SecurityProtocolType.Tls12
                    | SecurityProtocolType.Ssl3;
             WebClient client = new WebClient();
+            client.Headers.Add("user-agent", Browser.UserAgent);
             try
             {
                 string downloadString = client.DownloadString(page.Uri);

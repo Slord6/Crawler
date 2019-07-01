@@ -23,6 +23,10 @@ namespace Crawler.Parsers
             foreach(Match match in matches)
             {
                 string linkValue = match.Groups[1].Value;
+
+                // This is a super naive way to deal with query params
+                // TODO: improve
+                linkValue = linkValue.Split('?')[0];
                 try
                 {
                     if (Uri.IsWellFormedUriString(linkValue, UriKind.Absolute))
