@@ -27,5 +27,10 @@ namespace Crawler.Internet
         {
             this.uri = uri;
         }
+
+        public override string ToString()
+        {
+            return Uri.ToString();
+        }
     }
 }
