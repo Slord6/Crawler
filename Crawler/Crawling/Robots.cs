@@ -38,9 +38,6 @@ namespace Crawler.Crawling
         #endregion
 
         #region Constructors: require starting Url and UserAgent to create an object
-        private Robots()
-        { }
-
         public Robots(Uri startPageUri, string userAgent, bool debug = false)
         {
             _UserAgent = userAgent;
@@ -56,12 +53,17 @@ namespace Crawler.Crawling
                     _FileContents = stream.ReadToEnd();
                 }
 
-                string[] fileLines = _FileContents.Split(new string[] { "\n" }, StringSplitOptions.RemoveEmptyEntries);
+                string[] fileLines = _FileContents.Split(new string[] { "\r\n" }, StringSplitOptions.RemoveEmptyEntries);
+                if(fileLines.Length < 2)
+                {
+                    fileLines = _FileContents.Split(new string[] { "\n" }, StringSplitOptions.RemoveEmptyEntries);
+                }
 
                 bool rulesApply = false;
                 foreach (string line in fileLines)
                 {
                     RobotInstruction ri = new RobotInstruction(line);
+                    if (ri.Instruction.Length < 1) continue;
                     switch (ri.Instruction[0])
                     {
                         case '#':   //then comment - ignore
@@ -98,7 +100,8 @@ namespace Crawler.Crawling
                             break;
                         default:
                             // empty/unknown/error
-                            if (debug) Console.WriteLine("# Unrecognised robots.txt entry [" + line + "]");
+                            Console.WriteLine("Unrecognised robots.txt entry [" + line + "]");
+                            
                             break;
                     }
                 }
