@@ -49,8 +49,8 @@ namespace Crawler.Crawling
 
         public override string ToString()
         {
-            return "Page: " + Page + "," + ID + Environment.NewLine
-                + "Crawl time " + CrawlTime + Environment.NewLine
+            return "Page: " + Page + " - " + ID + Environment.NewLine
+                + "Timestamp: " + CrawlTime + Environment.NewLine
                 + "Content: " + Environment.NewLine + Content;
         }
     }
