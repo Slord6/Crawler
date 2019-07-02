@@ -64,7 +64,7 @@ namespace Crawler.Crawling
                 {
                     RobotInstruction ri = new RobotInstruction(line);
                     if (ri.Instruction.Length < 1) continue;
-                    switch (ri.Instruction[0])
+                    switch (ri.Instruction.TrimStart()[0]) // trim as leading whitespace before comments is valid http://www.robotstxt.org/orig.html
                     {
                         case '#':   //then comment - ignore
                             break;
