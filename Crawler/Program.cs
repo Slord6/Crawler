@@ -17,6 +17,7 @@ namespace Crawler
     class Program
     {
         private static ICrawlDatabase database;
+        private static Uri[] seeds = new Uri[] {};
 
         static void Main(string[] args)
         {
@@ -26,10 +27,7 @@ namespace Crawler
 
             try
             {
-                Uri[] seeds = new Uri[]
-                   {
-                new Uri("https://reddit.com/r/AskReddit/comments/c7yfub/what_did_a_crush_do_that_made_you_immediately/")
-                   };
+                
                 crawler = new CrawlWorker(seeds);
 
                 Run(crawler);
@@ -78,6 +76,21 @@ namespace Crawler
             Console.WriteLine("Search: " + database.Name);
             Browser.UserAgentContactInformation = args[1];
             Console.WriteLine("User Agent: " + Browser.UserAgent);
+            // Rest are seeds
+            seeds = new Uri[args.Length - 2];
+            for (int i = 2; i < args.Length; i++)
+            {
+                try
+                {
+                    seeds[i - 2] = new Uri(args[i]);
+                    Console.WriteLine("Added seed: " + seeds[i - 2].ToString());
+                }
+                catch(Exception ex)
+                {
+                    PrintHelp();
+                    return false;
+                }
+            }
             Console.WriteLine();
             return true;
         }
@@ -90,6 +103,8 @@ namespace Crawler
             Console.WriteLine("\t(Not currently used) Unique name for this search, used for storage/resume of crawls");
             Console.WriteLine("Argument 2:");
             Console.WriteLine("\tContact details, in case a bug causes problems for others");
+            Console.WriteLine("Argument 3->N");
+            Console.WriteLine("\tAll follwing arguments are url seeds eg. https://reddit.com");
             Console.WriteLine();
         }
     }
