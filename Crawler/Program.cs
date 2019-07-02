@@ -77,21 +77,44 @@ namespace Crawler
             Browser.UserAgentContactInformation = args[1];
             Console.WriteLine("User Agent: " + Browser.UserAgent);
             // Rest are seeds
-            seeds = new Uri[args.Length - 2];
-            for (int i = 2; i < args.Length; i++)
+            if (!ParseSeeds(args, 2)) return false;
+            Console.WriteLine();
+            return true;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="args"></param>
+        /// <param name="firstSeed"></param>
+        /// <returns>Were the seeds parsed successfully</returns>
+        private static bool ParseSeeds(string[] seedInputs, int firstSeed, List<Uri> uris = null)
+        {
+            if (uris == null) uris = new List<Uri>();
+            for (int i = firstSeed; i < seedInputs.Length; i++)
             {
+                string input = seedInputs[i];
                 try
                 {
-                    seeds[i - 2] = new Uri(args[i]);
-                    Console.WriteLine("Added seed: " + seeds[i - 2].ToString());
+                    if (File.Exists(input)) // input is file with list of seeds
+                    {
+                        ParseSeeds(File.ReadAllLines(input), 0, uris);
+                        continue;
+                    }
+                    else // input is url
+                    {
+                        uris.Add(new Uri(input));
+                        Console.WriteLine("Added seed: " + input);
+                    }
                 }
-                catch(Exception ex)
+                catch (Exception ex)
                 {
+                    Console.WriteLine(input + ", is probably invalid");
                     PrintHelp();
                     return false;
                 }
             }
-            Console.WriteLine();
+            seeds = uris.ToArray();
             return true;
         }
 
@@ -104,7 +127,7 @@ namespace Crawler
             Console.WriteLine("Argument 2:");
             Console.WriteLine("\tContact details, in case a bug causes problems for others");
             Console.WriteLine("Argument 3->N");
-            Console.WriteLine("\tAll follwing arguments are url seeds eg. https://reddit.com");
+            Console.WriteLine("\tAll follwing arguments are url seeds eg. https://reddit.com AND/OR path to files with a seed per line");
             Console.WriteLine();
         }
     }
