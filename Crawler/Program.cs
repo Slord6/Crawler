@@ -10,6 +10,7 @@ using System.Configuration;
 using System.Data;
 using System.IO;
 using Crawler.Crawling.Interfaces;
+using Crawler.Crashes;
 
 namespace Crawler
 {
@@ -21,12 +22,28 @@ namespace Crawler
         {
             if (!HandleArgs(args)) return;
 
-            Uri[] seeds = new Uri[]
-            {
-                new Uri("https://reddit.com")
-            };
+            CrawlWorker crawler = null;
 
-            CrawlWorker crawler = new CrawlWorker(seeds);
+            try
+            {
+                Uri[] seeds = new Uri[]
+                   {
+                new Uri("https://reddit.com/r/AskReddit/comments/c7yfub/what_did_a_crush_do_that_made_you_immediately/")
+                   };
+                crawler = new CrawlWorker(seeds);
+
+                Run(crawler);
+            }
+            catch (Exception ex)
+            {
+                CrashManager.Handle(ex, new object[] { crawler });
+            }
+
+            Console.ReadKey();
+        }
+
+        static void Run(CrawlWorker crawler)
+        {
 
             foreach (PageCrawl crawl in crawler.Start())
             {
@@ -34,7 +51,6 @@ namespace Crawler
             }
 
             Console.WriteLine("Ran out of links!");
-            Console.ReadKey();
         }
 
         /// <summary>

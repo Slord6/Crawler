@@ -14,6 +14,7 @@ namespace Crawler.Crawling
         private Queue<Uri> frontier;
         private HashSet<string> visited;
         private Dictionary<string, Robots> robots;
+        private PageCrawl latestCrawl;
 
         public CrawlWorker(Uri[] seeds)
         {
@@ -36,12 +37,12 @@ namespace Crawler.Crawling
 
                 if (ShouldSkip(nextCrawlLink)) continue;
 
-                PageCrawl crawl = Browser.Crawl(new Page(nextCrawlLink));
+                latestCrawl = Browser.Crawl(new Page(nextCrawlLink));
                 visited.Add(nextCrawlLink.ToString());
                 // Ensure crawl didn't fail
-                if (crawl == null) continue;
+                if (latestCrawl == null) continue;
 
-                Uri[] newLinks = LinkParser.Parse(crawl.Content, crawl.Page.Uri);
+                Uri[] newLinks = LinkParser.Parse(latestCrawl.Content, latestCrawl.Page.Uri);
 
                 // TODO add use of database here
                 // Add links and new crawl
@@ -54,7 +55,7 @@ namespace Crawler.Crawling
                     }
                 }
 
-                yield return crawl;
+                yield return latestCrawl;
                 int millisecondDelay = robots[nextCrawlLink.AbsoluteUri].CrawlDelay * 1000;
                 Console.WriteLine("Waiting for " + millisecondDelay + "ms");
                 Thread.Sleep(millisecondDelay);
@@ -90,6 +91,13 @@ namespace Crawler.Crawling
             }
 
             return false;
+        }
+
+        public override string ToString()
+        {
+            return "Crawl Worker: " + Environment.NewLine
+                + "Frontier size = " + frontier.Count + Environment.NewLine
+                + "Latest Crawl = " + (latestCrawl != null ? latestCrawl.ToString() : "none");
         }
     }
 

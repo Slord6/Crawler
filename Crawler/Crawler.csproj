@@ -60,6 +60,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Crashes\CrashManager.cs" />
     <Compile Include="Crawling\LoggerDatabase.cs" />
     <Compile Include="Crawling\FlatFileDatabase.cs" />
     <Compile Include="Crawling\CrawlWorker.cs" />

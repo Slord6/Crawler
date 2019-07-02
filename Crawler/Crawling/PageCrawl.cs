@@ -44,6 +44,14 @@ namespace Crawler.Crawling
             this.page = page;
             this.crawlTime = crawlTime;
             this.content = content;
+            this.ID = -1;
+        }
+
+        public override string ToString()
+        {
+            return "Page: " + Page + "," + ID + Environment.NewLine
+                + "Crawl time " + CrawlTime + Environment.NewLine
+                + "Content: " + Environment.NewLine + Content;
         }
     }
 }
