@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Crawler.Internet;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -46,6 +47,8 @@ namespace Crawler.Crawling
             try
             {
                 System.Net.HttpWebRequest req = (System.Net.HttpWebRequest)System.Net.WebRequest.Create("http://" + startPageUri.Authority + "/robots.txt");
+                req.UserAgent = Browser.UserAgent;
+                req.Accept = "text/plain";
                 System.Net.HttpWebResponse webresponse = (System.Net.HttpWebResponse)req.GetResponse();
 
                 using (System.IO.StreamReader stream = new System.IO.StreamReader(webresponse.GetResponseStream(), Encoding.ASCII))
@@ -110,11 +113,12 @@ namespace Crawler.Crawling
             {
                 _FileContents = String.Empty;
             }
-            catch (System.UriFormatException ex)
+            catch (System.Exception ex)
             {
-                Console.WriteLine("Robots uri format exception");
+                Console.WriteLine("Robots exception");
                 Console.WriteLine("Will continue, but will be extra cautious as it could be our fault");
                 Console.WriteLine("Attempted URL was " + "http://" + startPageUri.Authority + "/robots.txt");
+                Console.WriteLine(ex.Message);
                 _crawlDelay = 20;
                 _FileContents = String.Empty;
             }
