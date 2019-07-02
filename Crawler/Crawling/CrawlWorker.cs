@@ -56,7 +56,7 @@ namespace Crawler.Crawling
                 }
 
                 yield return latestCrawl;
-                int millisecondDelay = robots[nextCrawlLink.AbsoluteUri].CrawlDelay * 1000;
+                int millisecondDelay = robots[nextCrawlLink.Authority].CrawlDelay * 1000;
                 Console.WriteLine("Waiting for " + millisecondDelay + "ms");
                 Thread.Sleep(millisecondDelay);
             }
@@ -78,11 +78,11 @@ namespace Crawler.Crawling
             }
 
             // Skip those blocked by robots
-            if (!robots.ContainsKey(uri.AbsoluteUri))
+            if (!robots.ContainsKey(uri.Authority))
             {
                 robots.Add(uri.Authority, new Robots(uri, Browser.UserAgent));
             }
-            Robots robot = robots[uri.AbsoluteUri];
+            Robots robot = robots[uri.Authority];
 
             if (!robot.Allowed(uri))
             {
