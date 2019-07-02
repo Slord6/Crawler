@@ -80,7 +80,7 @@ namespace Crawler.Crawling
             // Skip those blocked by robots
             if (!robots.ContainsKey(uri.AbsoluteUri))
             {
-                robots.Add(uri.AbsoluteUri, new Robots(uri, Browser.UserAgent));
+                robots.Add(uri.Authority, new Robots(uri, Browser.UserAgent));
             }
             Robots robot = robots[uri.AbsoluteUri];
 
