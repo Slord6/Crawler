@@ -1,14 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Crawler.Internet
 {
     public class Page
     {
         private Uri uri;
+        private Page linkedFrom;
 
         public Uri Uri
         {
@@ -23,9 +20,10 @@ namespace Crawler.Internet
             get; set;
         }
 
-        public Page(Uri uri)
+        public Page(Uri uri, Page linkedFrom)
         {
             this.uri = uri;
+            this.linkedFrom = linkedFrom;
         }
 
         public override string ToString()

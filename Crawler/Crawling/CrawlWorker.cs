@@ -11,7 +11,7 @@ namespace Crawler.Crawling
 {
     public class CrawlWorker
     {
-        private Queue<Uri> frontier;
+        private Queue<Page> frontier;
         private HashSet<string> visited;
         private Dictionary<string, Robots> robots;
         private PageCrawl latestCrawl;
@@ -20,10 +20,10 @@ namespace Crawler.Crawling
         {
             visited = new HashSet<string>();
             robots = new Dictionary<string, Robots>();
-            frontier = new Queue<Uri>();
+            frontier = new Queue<Page>();
             foreach (Uri seed in seeds)
             {
-                frontier.Enqueue(seed);
+                frontier.Enqueue(new Page(seed, null));
             }
         }
 
@@ -33,12 +33,12 @@ namespace Crawler.Crawling
             {
                 Console.WriteLine("Frontier size: " + frontier.Count);
 
-                Uri nextCrawlLink = frontier.Dequeue();
+                Page nextCrawlPage = frontier.Dequeue();
 
-                if (ShouldSkip(nextCrawlLink)) continue;
+                if (ShouldSkip(nextCrawlPage.Uri)) continue;
 
-                latestCrawl = Browser.Crawl(new Page(nextCrawlLink));
-                visited.Add(nextCrawlLink.ToString());
+                latestCrawl = Browser.Crawl(nextCrawlPage);
+                visited.Add(nextCrawlPage.ToString());
                 // Ensure crawl didn't fail
                 if (latestCrawl == null) continue;
 
@@ -51,12 +51,12 @@ namespace Crawler.Crawling
                 {
                     if (!visited.Contains(uri.ToString()))
                     {
-                        frontier.Enqueue(uri);
+                        frontier.Enqueue(new Page(uri, nextCrawlPage));
                     }
                 }
 
                 yield return latestCrawl;
-                int millisecondDelay = robots[nextCrawlLink.Authority].CrawlDelay * 1000;
+                int millisecondDelay = robots[nextCrawlPage.Uri.Authority].CrawlDelay * 1000;
                 Console.WriteLine("Waiting for " + millisecondDelay + "ms");
                 Thread.Sleep(millisecondDelay);
             }
