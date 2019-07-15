@@ -164,6 +164,9 @@ namespace Crawler.Crawling
                         .Replace(".", @"\.") // escape periods
                         .Replace("/", @"\/") // escape forward slash
                         .Replace("*", ".+") // replace wildcard with regex wildcard
+                        .Replace("(", @"\(") // open parentheses escape
+                        .Replace(")", @"\)") // close parentheses escape
+                        .Replace("?", @"\?") // eascape question marks
                         + "(?:.?)+"; // include implicit trailing wildcard
             return new Regex(normalised, RegexOptions.IgnoreCase);
         }

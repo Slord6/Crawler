@@ -43,8 +43,7 @@ namespace Crawler.Crawling
                 if (latestCrawl == null) continue;
 
                 Uri[] newLinks = LinkParser.Parse(latestCrawl.Content, latestCrawl.Page.Uri);
-
-                // TODO add use of database here
+                
                 // Add links and new crawl
 
                 foreach (Uri uri in newLinks)
