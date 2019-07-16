@@ -61,6 +61,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Crashes\CrashManager.cs" />
+    <Compile Include="Crawling\CrawlSettings.cs" />
     <Compile Include="Crawling\LoggerDatabase.cs" />
     <Compile Include="Crawling\FlatFileDatabase.cs" />
     <Compile Include="Crawling\CrawlWorker.cs" />
@@ -72,6 +73,17 @@
     <Compile Include="Internet\Host.cs" />
     <Compile Include="Internet\Link.cs" />
     <Compile Include="Internet\Page.cs" />
+    <Compile Include="PageScoring\CandidateTracker.cs" />
+    <Compile Include="PageScoring\SearchTermsScorer.cs" />
+    <Compile Include="PageScoring\FixedComparisonJaccardScorer.cs" />
+    <Compile Include="PageScoring\IStringComparisonScorer.cs" />
+    <Compile Include="PageScoring\JaccardScorer.cs" />
+    <Compile Include="PageScoring\PageScorer.cs" />
+    <Compile Include="PageScoring\ScoreManager.cs" />
+    <Compile Include="PageScoring\ZeroedStringComparisonScorer.cs" />
+    <Compile Include="PageScoring\ThresholdRules\IScoreThresholdRule.cs" />
+    <Compile Include="PageScoring\ThresholdRules\MinMaxScoreThresholdRule.cs" />
+    <Compile Include="PageScoring\ThresholdRules\MinScoreThresholdRule.cs" />
     <Compile Include="Parsers\LinkParser.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
