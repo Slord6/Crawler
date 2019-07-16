@@ -81,7 +81,7 @@ namespace Crawler.Crawling
             if (!robots.ContainsKey(uri.Authority))
             {
                 // we just use the first part to determine if we're blocked - CrawLord/[version]
-                robots.Add(uri.Authority, new Robots(uri, Browser.UserAgent.Split(' ')[0], true));
+                robots.Add(uri.Authority, new Robots(uri, Browser.UserAgent.Split(' ')[0]));
             }
             Robots robot = robots[uri.Authority];
 
