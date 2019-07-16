@@ -72,7 +72,7 @@ namespace Crawler.Crawling
                         case '#':   //then comment - ignore
                             break;
                         case 'u':   // User-Agent
-                            if ((ri.UrlOrAgent.IndexOf("*") >= 0)
+                            if ((ri.UrlOrAgent == "*")
                               || (ri.UrlOrAgent.IndexOf(_UserAgent) >= 0))
                             { // these rules apply
                                 rulesApply = true;
@@ -98,8 +98,11 @@ namespace Crawler.Crawling
                             if (debug) Console.WriteLine("A" + ri.UrlOrAgent);
                             break;
                         case 'c':
-                            if (debug) Console.WriteLine("C " + ri.UrlOrAgent);
-                            _crawlDelay = Math.Abs(Convert.ToInt32(ri.UrlOrAgent));
+                            if (rulesApply)
+                            {
+                                if (debug) Console.WriteLine("C " + ri.UrlOrAgent);
+                                _crawlDelay = Math.Abs(Convert.ToInt32(ri.UrlOrAgent));
+                            }
                             break;
                         default:
                             // empty/unknown/error
