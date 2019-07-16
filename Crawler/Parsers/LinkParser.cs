@@ -24,9 +24,10 @@ namespace Crawler.Parsers
             {
                 string linkValue = match.Groups[1].Value;
 
-                // This is a super naive way to deal with query params
+                // This is a super naive way to deal with query params... and #'s
                 // TODO: improve
                 linkValue = linkValue.Split('?')[0];
+                linkValue = linkValue.Split('#')[0];
                 try
                 {
                     if (Uri.IsWellFormedUriString(linkValue, UriKind.Absolute))
