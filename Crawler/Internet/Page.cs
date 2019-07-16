@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Crawler.Crawling;
+using System;
 
 namespace Crawler.Internet
 {
@@ -6,12 +7,33 @@ namespace Crawler.Internet
     {
         private Uri uri;
         private Page linkedFrom;
+        private PageCrawl crawl;
 
         public Uri Uri
         {
             get
             {
                 return uri;
+            }
+        }
+
+        public Page LinkedFrom
+        {
+            get
+            {
+                return linkedFrom;
+            }
+        }
+
+        public PageCrawl Crawl
+        {
+            get
+            {
+                return crawl;
+            }
+            set
+            {
+                crawl = value;
             }
         }
 
@@ -24,6 +46,7 @@ namespace Crawler.Internet
         {
             this.uri = uri;
             this.linkedFrom = linkedFrom;
+            this.crawl = crawl;
         }
 
         public override string ToString()

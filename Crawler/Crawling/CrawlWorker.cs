@@ -33,12 +33,13 @@ namespace Crawler.Crawling
             {
                 Console.WriteLine("Frontier size: " + frontier.Count);
 
-                Page nextCrawlPage = frontier.Dequeue();
+                Page currentCrawlPage = frontier.Dequeue();
 
-                if (ShouldSkip(nextCrawlPage.Uri)) continue;
+                if (ShouldSkip(currentCrawlPage.Uri)) continue;
 
-                latestCrawl = Browser.Crawl(nextCrawlPage);
-                visited.Add(nextCrawlPage.ToString());
+                latestCrawl = Browser.Crawl(currentCrawlPage);
+                currentCrawlPage.Crawl = latestCrawl;
+                visited.Add(currentCrawlPage.ToString());
                 // Ensure crawl didn't fail
                 if (latestCrawl == null) continue;
 
@@ -51,12 +52,12 @@ namespace Crawler.Crawling
                 {
                     if (!visited.Contains(uri.ToString()))
                     {
-                        frontier.Enqueue(new Page(uri, nextCrawlPage));
+                        frontier.Enqueue(new Page(uri, currentCrawlPage));
                     }
                 }
 
                 yield return latestCrawl;
-                int millisecondDelay = robots[nextCrawlPage.Uri.Authority].CrawlDelay * 1000;
+                int millisecondDelay = robots[currentCrawlPage.Uri.Authority].CrawlDelay * 1000;
                 Console.WriteLine("Waiting for " + millisecondDelay + "ms");
                 Thread.Sleep(millisecondDelay);
             }

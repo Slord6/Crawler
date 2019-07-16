@@ -11,6 +11,8 @@ using System.Data;
 using System.IO;
 using Crawler.Crawling.Interfaces;
 using Crawler.Crashes;
+using Crawler.PageScoring;
+using Crawler.PageScoring.ThresholdRules;
 
 namespace Crawler
 {
@@ -42,10 +44,23 @@ namespace Crawler
 
         static void Run(CrawlWorker crawler)
         {
-
+            CandidateTracker candidateTracker = new CandidateTracker();
+            ScoreManager scoreManager = new ScoreManager(
+                new List<IStringComparisonScorer> {
+                    new JaccardScorer(),
+                    //new FixedComparisonJaccardScorer(File.ReadAllText(@".\comparisonText.txt"))
+                    new SearchTermsScorer(File.ReadAllText(@".\comparisonText.txt").Split(' '))
+                },
+                new List<IScoreThresholdRule> {
+                    new MinMaxScoreThresholdRule(0.4, 0.95, candidateTracker.HandleCandidate)
+                }
+                );
             foreach (PageCrawl crawl in crawler.Start())
             {
                 database.InsertPageCrawl(crawl);
+
+                scoreManager.Score(crawl, crawl.Page.LinkedFrom?.Crawl?.Content);
+                candidateTracker.WriteToDisk();
             }
 
             Console.WriteLine("Ran out of links!");
@@ -72,7 +87,8 @@ namespace Crawler
                 }
             }
 
-            database = new LoggerDatabase(args[0]);
+            CrawlSettings.CrawlName = args[0];
+            database = new LoggerDatabase();
             Console.WriteLine("Search: " + database.Name);
             Browser.UserAgentContactInformation = args[1];
             Console.WriteLine("User Agent: " + Browser.UserAgent);
@@ -83,7 +99,7 @@ namespace Crawler
         }
 
         /// <summary>
-        /// 
+        /// Parse the seeds for this search
         /// </summary>
         /// <param name="args"></param>
         /// <param name="firstSeed"></param>
@@ -123,7 +139,7 @@ namespace Crawler
             Console.WriteLine();
             Console.WriteLine(" =: CRAWLER HELP :=");
             Console.WriteLine("Argument 1:");
-            Console.WriteLine("\t(Not currently used) Unique name for this search, used for storage/resume of crawls");
+            Console.WriteLine("\tUnique name for this search, used for file names etc");
             Console.WriteLine("Argument 2:");
             Console.WriteLine("\tContact details, in case a bug causes problems for others");
             Console.WriteLine("Argument 3->N");

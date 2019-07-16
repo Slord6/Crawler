@@ -10,9 +10,9 @@ namespace Crawler.Crawling
 {
     class LoggerDatabase : NamedDatabase
     {
-        public LoggerDatabase(string name)
+        public LoggerDatabase()
         {
-            this.name = name;
+            this.name = CrawlSettings.CrawlName + "_loggerDb";
             Console.WriteLine("Logger database active - content will not be saved");
         }
 
