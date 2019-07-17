@@ -38,6 +38,7 @@ namespace Crawler.Crawling
                 if (ShouldSkip(currentCrawlPage.Uri)) continue;
 
                 latestCrawl = Browser.Crawl(currentCrawlPage);
+                
                 currentCrawlPage.Crawl = latestCrawl;
                 visited.Add(currentCrawlPage.ToString());
                 // Ensure crawl didn't fail
@@ -57,6 +58,7 @@ namespace Crawler.Crawling
 
                 yield return latestCrawl;
                 int millisecondDelay = robots[currentCrawlPage.Uri.Authority].CrawlDelay * 1000;
+                millisecondDelay = (int)Math.Max(0, millisecondDelay - (DateTime.Now - latestCrawl.CrawlTime).TotalMilliseconds);
                 Console.WriteLine("Waiting for " + millisecondDelay + "ms");
                 Thread.Sleep(millisecondDelay);
             }

@@ -1,13 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Crawler.Internet;
 using Crawler.Crawling;
-using System.Data.SqlClient;
-using System.Configuration;
-using System.Data;
 using System.IO;
 using Crawler.Crawling.Interfaces;
 using Crawler.Crashes;
@@ -52,7 +47,7 @@ namespace Crawler
                     new SearchTermsScorer(File.ReadAllText(@".\comparisonText.txt").Split(' '))
                 },
                 new List<IScoreThresholdRule> {
-                    new MinMaxScoreThresholdRule(0.4, 0.95, candidateTracker.HandleCandidate)
+                    new MinMaxScoreThresholdRule(0.4, 0.99, candidateTracker.HandleCandidate)
                 }
                 );
             foreach (PageCrawl crawl in crawler.Start())
