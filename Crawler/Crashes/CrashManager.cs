@@ -23,7 +23,7 @@ namespace Crawler.Crashes
             int count = 1;
             while(innerException != null)
             {
-                AddException(innerException, builder, "Inner Excpetion " + count);
+                AddException(innerException, builder, "Inner Exception " + count);
                 count++;
                 innerException = innerException.InnerException;
             }

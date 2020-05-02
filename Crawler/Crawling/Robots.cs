@@ -2,6 +2,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -163,15 +164,28 @@ namespace Crawler.Crawling
         /// <returns></returns>
         private Regex ToRegex(string denyUrl)
         {
-            string normalised = denyUrl
-                        .Replace(".", @"\.") // escape periods
-                        .Replace("/", @"\/") // escape forward slash
-                        .Replace("*", ".+") // replace wildcard with regex wildcard
-                        .Replace("(", @"\(") // open parentheses escape
-                        .Replace(")", @"\)") // close parentheses escape
-                        .Replace("?", @"\?") // eascape question marks
-                        + "(?:.?)+"; // include implicit trailing wildcard
-            return new Regex(normalised, RegexOptions.IgnoreCase);
+            try
+            {
+                string normalised = denyUrl
+                            .Replace(".", @"\.") // escape periods
+                            .Replace("/", @"\/") // escape forward slash
+                            .Replace("*", ".+") // replace wildcard with regex wildcard
+                            .Replace("(", @"\(") // open parentheses escape
+                            .Replace(")", @"\)") // close parentheses escape
+                            .Replace("?", @"\?") // escape question marks
+                            + "(?:.?)+"; // include implicit trailing wildcard
+                return new Regex(normalised, RegexOptions.IgnoreCase);
+            }
+            catch(Exception ex)
+            {
+                string text = "Robots failure to parse URL to normalised form" + Environment.NewLine
+                    + ex.ToString() + Environment.NewLine;
+
+                Console.WriteLine(text);
+                File.WriteAllText(@".\RobotsFailure_" + CrawlSettings.CrawlName + ".dump", text);
+
+                return new Regex(".+"); // skip failed parsings
+            }
         }
         #endregion
 
