@@ -1,0 +1,8 @@
+Program DIR
+<Crawl DIR>
+	<Host>
+		<Page Crawl File>
+		- URL
+		- LinkedFrom URL
+		- Timestamp
+		- Page Content

@@ -13,7 +13,7 @@ namespace Crawler
 {
     class Program
     {
-        private static ICrawlDatabase database;
+        private static List<ICrawlDatabase> databases = new List<ICrawlDatabase>();
         private static Uri[] seeds = new Uri[] {};
 
         static void Main(string[] args)
@@ -52,7 +52,7 @@ namespace Crawler
                 );
             foreach (PageCrawl crawl in crawler.Start())
             {
-                database.InsertPageCrawl(crawl);
+                databases.ForEach(db => db.InsertPageCrawl(crawl));
 
                 scoreManager.Score(crawl, crawl.Page.LinkedFrom?.Crawl?.Content);
                 candidateTracker.WriteToDisk();
@@ -83,8 +83,10 @@ namespace Crawler
             }
 
             CrawlSettings.CrawlName = args[0];
-            database = new LoggerDatabase();
-            Console.WriteLine("Search: " + database.Name);
+            databases.Add(new LoggerDatabase());
+            databases.Add(new FlatFileDatabase(CrawlSettings.CrawlName));
+            Console.WriteLine("Search: " + CrawlSettings.CrawlName);
+
             Browser.UserAgentContactInformation = args[1];
             Console.WriteLine("User Agent: " + Browser.UserAgent);
             // Rest are seeds

@@ -24,7 +24,7 @@ namespace Crawler.Crawling
 
         public override PageCrawl InsertPageCrawl(PageCrawl crawl)
         {
-            Console.WriteLine("Mock database crawl insert:");
+            Console.WriteLine("Logger database crawl insert:");
             Console.WriteLine(crawl.Page.Uri.ToString());
             Console.WriteLine(crawl.Content.Length + " bytes");
             Console.WriteLine(crawl.CrawlTime);
