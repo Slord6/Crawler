@@ -30,7 +30,7 @@ namespace Crawler.Crawling
             Directory.CreateDirectory(Path.GetDirectoryName(crawlPath));
             StreamWriter streamWriter = File.CreateText(crawlPath);
 
-            streamWriter.Write(crawl.Page.Uri.AbsoluteUri);
+            streamWriter.Write(crawl.Page.Uri.ToString());
             streamWriter.Write(DATA_SEPARATOR);
             streamWriter.Write(crawl.Page.LinkedFrom);
             streamWriter.Write(DATA_SEPARATOR);
