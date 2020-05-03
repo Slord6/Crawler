@@ -2,6 +2,7 @@
 using Crawler.Internet;
 using System;
 using System.IO;
+using System.Linq;
 
 namespace Crawler.Crawling
 {
