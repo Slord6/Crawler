@@ -9,7 +9,7 @@ namespace Crawler.Crashes
 {
     internal class CrashManager
     {
-        private static string fileLocation = @".\crash.dump";
+        private static string fileLocation = @".\crash.log";
 
         public static void Handle(Exception ex, object[] extra = null)
         {

@@ -183,7 +183,7 @@ namespace Crawler.Crawling
                     + "denyURL: " + denyUrl;
 
                 Console.WriteLine(text);
-                File.AppendAllText(@".\RobotsFailure_" + CrawlSettings.CrawlName + ".dump", text);
+                File.AppendAllText(@".\RobotsFailure_" + CrawlSettings.CrawlName + ".log", text);
 
                 return new Regex(".+"); // skip failed parsings
             }
