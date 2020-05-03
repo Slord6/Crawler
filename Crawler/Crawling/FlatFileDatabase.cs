@@ -26,6 +26,13 @@ namespace Crawler.Crawling
         {
             Console.WriteLine("FILE DB");
             string crawlPath = GetPageCrawlPath(crawl);
+
+            // Ensure contains no invalid chars
+            foreach (char invalidChar in Path.GetInvalidFileNameChars().Concat(Path.GetInvalidPathChars()))
+            {
+                crawlPath.Replace(invalidChar, '_');
+            }
+
             // creating an existing directory has no effect so we can do that every time
             Directory.CreateDirectory(Path.GetDirectoryName(crawlPath));
             StreamWriter streamWriter = File.CreateText(crawlPath);

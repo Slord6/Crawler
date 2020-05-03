@@ -179,10 +179,11 @@ namespace Crawler.Crawling
             catch(Exception ex)
             {
                 string text = "Robots failure to parse URL to normalised form" + Environment.NewLine
-                    + ex.ToString() + Environment.NewLine;
+                    + ex.ToString() + Environment.NewLine
+                    + "denyURL: " + denyUrl;
 
                 Console.WriteLine(text);
-                File.WriteAllText(@".\RobotsFailure_" + CrawlSettings.CrawlName + ".dump", text);
+                File.AppendAllText(@".\RobotsFailure_" + CrawlSettings.CrawlName + ".dump", text);
 
                 return new Regex(".+"); // skip failed parsings
             }

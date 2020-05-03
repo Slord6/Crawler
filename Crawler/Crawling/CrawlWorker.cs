@@ -99,8 +99,10 @@ namespace Crawler.Crawling
         public override string ToString()
         {
             return "Crawl Worker: " + Environment.NewLine
+                + "Latest Crawl = " + (latestCrawl != null ? latestCrawl.ToString() : "none")
+                + Environment.NewLine + Environment.NewLine
                 + "Frontier size = " + frontier.Count + Environment.NewLine
-                + "Latest Crawl = " + (latestCrawl != null ? latestCrawl.ToString() : "none");
+                + "Frontier = " + Environment.NewLine + string.Join(Environment.NewLine, frontier);
         }
     }
 
