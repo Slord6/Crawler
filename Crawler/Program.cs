@@ -50,12 +50,15 @@ namespace Crawler
                     new MinMaxScoreThresholdRule(0.4, 0.99, candidateTracker.HandleCandidate)
                 }
                 );
+            string frontierFileName = "Frontier_" + CrawlSettings.CrawlName;
             foreach (PageCrawl crawl in crawler.Start())
             {
                 databases.ForEach(db => db.InsertPageCrawl(crawl));
 
                 scoreManager.Score(crawl, crawl.Page.LinkedFrom?.Crawl?.Content);
                 candidateTracker.WriteToDisk();
+
+                File.WriteAllText(frontierFileName, crawler.Frontiers);
             }
 
             Console.WriteLine("Ran out of links!");
@@ -103,6 +106,7 @@ namespace Crawler
         /// <returns>Were the seeds parsed successfully</returns>
         private static bool ParseSeeds(string[] seedInputs, int firstSeed, List<Uri> uris = null)
         {
+            Console.WriteLine("Adding " + (seedInputs.Length - firstSeed) + " seeds...");
             if (uris == null) uris = new List<Uri>();
             for (int i = firstSeed; i < seedInputs.Length; i++)
             {
@@ -117,7 +121,6 @@ namespace Crawler
                     else // input is url
                     {
                         uris.Add(new Uri(input));
-                        Console.WriteLine("Added seed: " + input);
                     }
                 }
                 catch (Exception ex)

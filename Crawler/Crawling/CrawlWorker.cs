@@ -16,6 +16,14 @@ namespace Crawler.Crawling
         private Dictionary<string, Robots> robots;
         private PageCrawl latestCrawl;
 
+        public string Frontiers
+        {
+            get
+            {
+                return string.Join(Environment.NewLine, frontier);
+            }
+        }
+
         public CrawlWorker(Uri[] seeds)
         {
             visited = new HashSet<string>();
@@ -102,7 +110,7 @@ namespace Crawler.Crawling
                 + "Latest Crawl = " + (latestCrawl != null ? latestCrawl.ToString() : "none")
                 + Environment.NewLine + Environment.NewLine
                 + "Frontier size = " + frontier.Count + Environment.NewLine
-                + "Frontier = " + Environment.NewLine + string.Join(Environment.NewLine, frontier);
+                + "Frontier = " + Environment.NewLine + Frontiers;
         }
     }
 
