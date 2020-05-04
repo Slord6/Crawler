@@ -31,23 +31,39 @@ namespace Crawler.Crawling
             // Ensure contains no invalid chars
             foreach (char invalidChar in Path.GetInvalidFileNameChars().Concat(Path.GetInvalidPathChars()))
             {
-                crawlPath.Replace(invalidChar, '_');
+                if (invalidChar == '/' || invalidChar == '\\') continue; // leaves slashes to preserve file path
+
+                crawlPath = crawlPath.Replace(invalidChar, '_');
+            }
+
+            if(String.IsNullOrWhiteSpace(crawlPath) || String.IsNullOrEmpty(crawlPath))
+            {
+                crawlPath = "%20";
             }
 
             // creating an existing directory has no effect so we can do that every time
-            Directory.CreateDirectory(Path.GetDirectoryName(crawlPath));
-            StreamWriter streamWriter = File.CreateText(crawlPath);
+            try
+            {
+                Directory.CreateDirectory(Path.GetDirectoryName(crawlPath));
+                StreamWriter streamWriter = File.CreateText(crawlPath);
 
-            streamWriter.Write(crawl.Page.Uri.ToString());
-            streamWriter.Write(DATA_SEPARATOR);
-            streamWriter.Write(crawl.Page.LinkedFrom);
-            streamWriter.Write(DATA_SEPARATOR);
-            streamWriter.Write(crawl.CrawlTime);
-            streamWriter.Write(DATA_SEPARATOR);
-            streamWriter.Write(crawl.Content);
-            streamWriter.Close();
+                streamWriter.Write(crawl.Page.Uri.ToString());
+                streamWriter.Write(DATA_SEPARATOR);
+                streamWriter.Write(crawl.Page.LinkedFrom);
+                streamWriter.Write(DATA_SEPARATOR);
+                streamWriter.Write(crawl.CrawlTime);
+                streamWriter.Write(DATA_SEPARATOR);
+                streamWriter.Write(crawl.Content);
+                streamWriter.Close();
+            }
+            catch(Exception ex)
+            {
+                string errMsg = "Failed to save crawl to disk - " + crawl.Page.Uri.ToString() + " at " + crawlPath;
+                Console.WriteLine(errMsg);
+                throw new IOException(errMsg, ex);
+            }
 
-            Console.WriteLine("Saving crawl to " + crawlPath);
+            Console.WriteLine("Saved crawl to " + crawlPath);
 
             return crawl;
         }
